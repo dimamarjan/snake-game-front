@@ -1,0 +1,16 @@
+export const colors = {
+    foodSecondColor: "#0000ff",
+    foodMainOneColor: "#00ff00",
+    foodMainFiveColor: "#19ff00",
+    foodMainTenColor: "#ff0000",
+    gameFieldColor: "#ffffff",
+    mainTextColor: "#ffffff",
+    scoreListBcgColor: "#000000",
+    scoreListTextColor: "#ff0000",
+    scoreListCurrentUserBcgColor: "#00ff00",
+    scoreListCurrentUserTxtColor: "#19ff00",
+    userScoreColor: "#ffffff",
+    buttonsColor: "#000000",
+    snakeColor: "#705e84",
+    alertMessage: "#ed6f95",
+};
