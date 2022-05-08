@@ -41,6 +41,9 @@ export function StartGame() {
             clearTimeout(interval);
             setLoadingEmitationStr(".");
         }
+        return () => {
+            clearTimeout(interval);
+        };
     }, [isLoading, loadingImitationStr]);
 
     const onCllickHandler = (e) => {
