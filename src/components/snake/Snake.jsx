@@ -28,6 +28,7 @@ export function Snake() {
     const [isMovingTo, setIsMovingTo] = useState(null);
     const [level, setLevel] = useState(1);
     const [isPaused, setIsPaused] = useState(false);
+    const [prevKey, setPrevKey] = useState();
 
     const dispatch = useDispatch();
 
@@ -57,14 +58,14 @@ export function Snake() {
     const moving = useCallback(
         (direction) => {
             if (!isPaused && !isGameOver) {
+                clearTimeout(intervalMovement);
+                checkСannibalism(snake);
                 switch (direction) {
                     case "right":
-                        clearTimeout(intervalMovement);
-                        setIntervalMovement(
+                        return setIntervalMovement(
                             setTimeout(() => {
+                                let newMove = [];
                                 if (snake[0][1] + 10 < gameArea[1]) {
-                                    checkСannibalism(snake);
-                                    let newMove = [];
                                     snake.forEach((elem, i) => {
                                         if (i === 0) {
                                             newMove.push([
@@ -75,10 +76,7 @@ export function Snake() {
                                             newMove.push(snake[i - 1]);
                                         }
                                     });
-                                    dispatch(snakeOperation(newMove));
-                                    blockReversDirection(direction);
                                 } else {
-                                    let newMove = [];
                                     snake.forEach((elem, i) => {
                                         if (i === 0) {
                                             newMove.push([
@@ -89,19 +87,16 @@ export function Snake() {
                                             newMove.push(snake[i - 1]);
                                         }
                                     });
-                                    dispatch(snakeOperation(newMove));
-                                    blockReversDirection(direction);
                                 }
+                                dispatch(snakeOperation(newMove));
+                                blockReversDirection(direction);
                             }, speed)
                         );
-                        return;
                     case "down":
-                        clearTimeout(intervalMovement);
-                        setIntervalMovement(
+                        return setIntervalMovement(
                             setTimeout(() => {
+                                let newMove = [];
                                 if (snake[0][0] + 10 < gameArea[0]) {
-                                    checkСannibalism(snake);
-                                    let newMove = [];
                                     snake.forEach((elem, i) => {
                                         if (i === 0) {
                                             newMove.push([
@@ -112,10 +107,7 @@ export function Snake() {
                                             newMove.push(snake[i - 1]);
                                         }
                                     });
-                                    dispatch(snakeOperation(newMove));
-                                    blockReversDirection(direction);
                                 } else {
-                                    let newMove = [];
                                     snake.forEach((elem, i) => {
                                         if (i === 0) {
                                             newMove.push([
@@ -126,19 +118,16 @@ export function Snake() {
                                             newMove.push(snake[i - 1]);
                                         }
                                     });
-                                    dispatch(snakeOperation(newMove));
-                                    blockReversDirection(direction);
                                 }
+                                dispatch(snakeOperation(newMove));
+                                blockReversDirection(direction);
                             }, speed)
                         );
-                        return;
                     case "left":
-                        clearTimeout(intervalMovement);
-                        setIntervalMovement(
+                        return setIntervalMovement(
                             setTimeout(() => {
+                                let newMove = [];
                                 if (snake[0][1] - 10 >= 0) {
-                                    checkСannibalism(snake);
-                                    let newMove = [];
                                     snake.forEach((elem, i) => {
                                         if (i === 0) {
                                             newMove.push([
@@ -149,10 +138,7 @@ export function Snake() {
                                             newMove.push(snake[i - 1]);
                                         }
                                     });
-                                    dispatch(snakeOperation(newMove));
-                                    blockReversDirection(direction);
                                 } else {
-                                    let newMove = [];
                                     snake.forEach((elem, i) => {
                                         if (i === 0) {
                                             newMove.push([
@@ -163,19 +149,16 @@ export function Snake() {
                                             newMove.push(snake[i - 1]);
                                         }
                                     });
-                                    dispatch(snakeOperation(newMove));
-                                    blockReversDirection(direction);
                                 }
+                                dispatch(snakeOperation(newMove));
+                                blockReversDirection(direction);
                             }, speed)
                         );
-                        return;
                     case "up":
-                        clearTimeout(intervalMovement);
-                        setIntervalMovement(
+                        return setIntervalMovement(
                             setTimeout(() => {
+                                let newMove = [];
                                 if (snake[0][0] - 10 >= 0) {
-                                    checkСannibalism(snake);
-                                    let newMove = [];
                                     snake.forEach((elem, i) => {
                                         if (i === 0) {
                                             newMove.push([
@@ -186,10 +169,7 @@ export function Snake() {
                                             newMove.push(snake[i - 1]);
                                         }
                                     });
-                                    dispatch(snakeOperation(newMove));
-                                    blockReversDirection(direction);
                                 } else {
-                                    let newMove = [];
                                     snake.forEach((elem, i) => {
                                         if (i === 0) {
                                             newMove.push([
@@ -200,12 +180,11 @@ export function Snake() {
                                             newMove.push(snake[i - 1]);
                                         }
                                     });
-                                    dispatch(snakeOperation(newMove));
-                                    blockReversDirection(direction);
                                 }
+                                dispatch(snakeOperation(newMove));
+                                blockReversDirection(direction);
                             }, speed)
                         );
-                        return;
                     default:
                         return;
                 }
@@ -224,26 +203,33 @@ export function Snake() {
     );
 
     const onKeyHandler = useCallback(
+        // I needed to duplicate the setPrevKey() function for each case
+        // in order to avoid blocking the snake's movement when pressing
+        // the key several times.
         (e) => {
             switch (e.code) {
                 case "ArrowRight":
-                    if (isMovingTo !== "left") {
-                        return setDirection("right");
+                    if (isMovingTo !== "left" && prevKey !== "ArrowRight") {
+                        setDirection("right");
+                        return setPrevKey(e.code);
                     }
                     return;
                 case "ArrowDown":
-                    if (isMovingTo !== "up") {
-                        return setDirection("down");
+                    if (isMovingTo !== "up" && prevKey !== "ArrowDown") {
+                        setDirection("down");
+                        return setPrevKey(e.code);
                     }
                     return;
                 case "ArrowLeft":
-                    if (isMovingTo !== "right") {
-                        return setDirection("left");
+                    if (isMovingTo !== "right" && prevKey !== "ArrowLeft") {
+                        setDirection("left");
+                        return setPrevKey(e.code);
                     }
                     return;
                 case "ArrowUp":
-                    if (isMovingTo !== "down") {
-                        return setDirection("up");
+                    if (isMovingTo !== "down" && prevKey !== "ArrowUp") {
+                        setDirection("up");
+                        return setPrevKey(e.code);
                     }
                     return;
                 case "Space":
@@ -259,7 +245,7 @@ export function Snake() {
                     return;
             }
         },
-        [isMovingTo, isPaused]
+        [isMovingTo, isPaused, prevKey]
     );
 
     const pointsCollect = useCallback(
