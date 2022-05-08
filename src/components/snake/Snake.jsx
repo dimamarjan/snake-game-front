@@ -209,25 +209,41 @@ export function Snake() {
         (e) => {
             switch (e.code) {
                 case "ArrowRight":
-                    if (isMovingTo !== "left" && prevKey !== "ArrowRight") {
+                    if (
+                        isMovingTo !== "left" &&
+                        prevKey !== "ArrowRight" &&
+                        !isPaused
+                    ) {
                         setDirection("right");
                         return setPrevKey(e.code);
                     }
                     return;
                 case "ArrowDown":
-                    if (isMovingTo !== "up" && prevKey !== "ArrowDown") {
+                    if (
+                        isMovingTo !== "up" &&
+                        prevKey !== "ArrowDown" &&
+                        !isPaused
+                    ) {
                         setDirection("down");
                         return setPrevKey(e.code);
                     }
                     return;
                 case "ArrowLeft":
-                    if (isMovingTo !== "right" && prevKey !== "ArrowLeft") {
+                    if (
+                        isMovingTo !== "right" &&
+                        prevKey !== "ArrowLeft" &&
+                        !isPaused
+                    ) {
                         setDirection("left");
                         return setPrevKey(e.code);
                     }
                     return;
                 case "ArrowUp":
-                    if (isMovingTo !== "down" && prevKey !== "ArrowUp") {
+                    if (
+                        isMovingTo !== "down" &&
+                        prevKey !== "ArrowUp" &&
+                        !isPaused
+                    ) {
                         setDirection("up");
                         return setPrevKey(e.code);
                     }
