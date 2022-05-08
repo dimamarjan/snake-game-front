@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
     InputSection,
@@ -15,18 +15,37 @@ import {
 import { setUserNameOperation } from "../../store/snakeSlice";
 import { getUsers } from "../../store/snakeAsyncOperations";
 import { checkUserName } from "../../utils/checkUserName";
+import { colors } from "../../style/colors";
 
 export function StartGame() {
     const [inputName, setInputName] = useState("");
     const [isShowMessage, setIsShowMessage] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [loadingImitationStr, setLoadingEmitationStr] = useState(".");
     const dispatch = useDispatch();
 
     const onChangeHandler = (e) => {
-        setInputName(e.target.value);
+        if (e.target.value) {
+            setInputName(e.target.value);
+        }
     };
+
+    useEffect(() => {
+        let interval;
+        if (isLoading) {
+            interval = setTimeout(() => {
+                setLoadingEmitationStr(loadingImitationStr + ".");
+            }, 500);
+        }
+        if (loadingImitationStr.length > 20) {
+            clearTimeout(interval);
+            setLoadingEmitationStr(".");
+        }
+    }, [isLoading, loadingImitationStr]);
 
     const onCllickHandler = (e) => {
         e.preventDefault();
+        setIsLoading(true);
         checkUserName(inputName)
             .then(() => {
                 dispatch(setUserNameOperation(inputName));
@@ -36,6 +55,7 @@ export function StartGame() {
                 let message;
                 if (err.code === "ERR_BAD_REQUEST") {
                     clearInterval(message);
+                    setIsLoading(false);
                     setIsShowMessage(true);
                     message = setInterval(() => setIsShowMessage(false), 5000);
                 }
@@ -56,7 +76,14 @@ export function StartGame() {
                     </Label>
                     <SubButton type="submit">ready!</SubButton>
                     {isShowMessage && (
-                        <Message>*this name already used</Message>
+                        <Message color={colors.alertMessageColor}>
+                            *this name already used
+                        </Message>
+                    )}
+                    {isLoading && (
+                        <Message color={colors.loadingMessageColor}>
+                            {loadingImitationStr}loading{loadingImitationStr}
+                        </Message>
                     )}
                 </FormSection>
             </InputSection>

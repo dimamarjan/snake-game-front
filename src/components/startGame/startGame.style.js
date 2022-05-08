@@ -63,6 +63,6 @@ export const TextAccent = styled.span`
     margin: 0 10px;
 `;
 
-export const Message = styled.p`
-    color: ${colors.alertMessage};
-`;
+export const Message = styled.p({}, (props) => ({
+    color: props.color,
+}));

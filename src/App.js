@@ -3,6 +3,7 @@ import { StartGame } from "./components/startGame/StartGame";
 import { MainGameSection } from "./components/mainGameSection/MainGameSection";
 import { Snake } from "./components/snake/Snake";
 import { Food } from "./components/food/Food";
+import { ScoreTable } from "./components/scoreTable/ScoreTable";
 
 function App() {
     const userName = useSelector((state) => state.snake.userName);
@@ -14,6 +15,7 @@ function App() {
                 <MainGameSection>
                     <Snake />
                     <Food />
+                    <ScoreTable />
                 </MainGameSection>
             )}
         </div>
