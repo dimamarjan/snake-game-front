@@ -25,9 +25,7 @@ export function StartGame() {
     const dispatch = useDispatch();
 
     const onChangeHandler = (e) => {
-        if (e.target.value) {
-            setInputName(e.target.value);
-        }
+        setInputName(e.target.value);
     };
 
     useEffect(() => {
@@ -48,6 +46,9 @@ export function StartGame() {
 
     const onCllickHandler = (e) => {
         e.preventDefault();
+        if (!inputName) {
+            return;
+        }
         setIsLoading(true);
         checkUserName(inputName)
             .then(() => {
